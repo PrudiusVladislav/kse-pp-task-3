@@ -1,7 +1,23 @@
-#include "library.h"
+#include "encrypt.h"
 
-#include <iostream>
 
-void hello() {
-    std::cout << "Hello, World!" << std::endl;
+extern "C"
+{
+    __declspec(dllexport) char *encrypt(char *message, const int key)
+    {
+        for (int i = 0; message[i] != '\0'; i++)
+        {
+            message[i] += key;
+        }
+        return message;
+    }
+
+    __declspec(dllexport) char *decrypt(char *message, const int key)
+    {
+        for (int i = 0; message[i] != '\0'; i++)
+        {
+            message[i] -= key;
+        }
+        return message;
+    }
 }
