@@ -1,23 +1,30 @@
 #include "encrypt.h"
 
+#include <cctype>
 
-extern "C"
+char shift_char(const char c, const int key) {
+    if (!isalpha(c)) {
+        return c;
+    }
+
+    const char offset = isupper(c) ? 'A' : 'a';
+    return (c - offset + key + 26) % 26 + offset;
+}
+
+char *encrypt(char *message, const int key)
 {
-    __declspec(dllexport) char *encrypt(char *message, const int key)
+    for (int i = 0; message[i] != '\0'; i++)
     {
-        for (int i = 0; message[i] != '\0'; i++)
-        {
-            message[i] += key;
-        }
-        return message;
+        message[i] = shift_char(message[i], key);
     }
+    return message;
+}
 
-    __declspec(dllexport) char *decrypt(char *message, const int key)
+char *decrypt(char *message, const int key)
+{
+    for (int i = 0; message[i] != '\0'; i++)
     {
-        for (int i = 0; message[i] != '\0'; i++)
-        {
-            message[i] -= key;
-        }
-        return message;
+        message[i] = shift_char(message[i], -key);
     }
+    return message;
 }
